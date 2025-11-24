@@ -48,7 +48,7 @@ export const StorageStats = ({ userId }: StorageStatsProps) => {
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Storage Usage</span>
+              <span className="text-sm font-medium">Использование хранилища</span>
               <span className="text-sm text-muted-foreground">
                 {formatBytes(storageUsed)} / {formatBytes(storageLimit)}
               </span>

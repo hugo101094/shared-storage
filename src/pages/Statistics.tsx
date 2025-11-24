@@ -71,7 +71,7 @@ const Statistics = () => {
           <div className="max-w-7xl mx-auto space-y-6">
             <div className="flex items-center gap-3 mb-6">
               <BarChart3 className="w-8 h-8 text-primary" />
-              <h1 className="text-3xl font-bold">Statistics</h1>
+              <h1 className="text-3xl font-bold">Статистика</h1>
             </div>
 
             {loading ? (
@@ -81,7 +81,7 @@ const Statistics = () => {
             ) : stats.length === 0 ? (
               <Card>
                 <CardContent className="flex items-center justify-center py-12 text-muted-foreground">
-                  No statistics available yet. Upload some files to see stats!
+                  Статистика пока недоступна. Загрузите файлы, чтобы увидеть статистику!
                 </CardContent>
               </Card>
             ) : (
@@ -97,11 +97,11 @@ const Statistics = () => {
                     <CardContent>
                       <div className="space-y-2">
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">Files:</span>
+                          <span className="text-sm text-muted-foreground">Файлов:</span>
                           <span className="font-semibold">{stat.file_count || 0}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">Total Size:</span>
+                          <span className="text-sm text-muted-foreground">Общий размер:</span>
                           <span className="font-semibold">{formatBytes(stat.total_size || 0)}</span>
                         </div>
                       </div>

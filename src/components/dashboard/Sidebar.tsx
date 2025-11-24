@@ -40,7 +40,7 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
       .order("name");
 
     if (error) {
-      toast.error("Failed to load folders");
+      toast.error("Не удалось загрузить папки");
       return;
     }
 
@@ -62,11 +62,11 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
     });
 
     if (error) {
-      toast.error("Failed to create folder");
+      toast.error("Не удалось создать папку");
       return;
     }
 
-    toast.success("Folder created");
+    toast.success("Папка создана");
     setNewFolderName("");
     setIsDialogOpen(false);
     loadFolders();
@@ -75,6 +75,9 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
   const handleFolderClick = (folderId: string | null) => {
     setSelectedFolder(folderId);
     onFolderChange(folderId);
+    if (folderId === null) {
+      navigate("/dashboard");
+    }
   };
 
   return (
@@ -99,11 +102,11 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
             onClick={() => handleFolderClick(null)}
           >
             <Home className="mr-2 h-4 w-4" />
-            All Files
+            Все файлы
           </Button>
 
           <div className="pt-4 pb-2 px-2 flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted-foreground uppercase">Folders</span>
+            <span className="text-xs font-semibold text-muted-foreground uppercase">Папки</span>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-6 w-6">
@@ -112,21 +115,21 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Create New Folder</DialogTitle>
+                  <DialogTitle>Создать новую папку</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4 pt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="folder-name">Folder Name</Label>
+                    <Label htmlFor="folder-name">Название папки</Label>
                     <Input
                       id="folder-name"
                       value={newFolderName}
                       onChange={(e) => setNewFolderName(e.target.value)}
-                      placeholder="Enter folder name"
+                      placeholder="Введите название папки"
                       onKeyDown={(e) => e.key === "Enter" && createFolder()}
                     />
                   </div>
                   <Button onClick={createFolder} className="w-full">
-                    Create Folder
+                    Создать папку
                   </Button>
                 </div>
               </DialogContent>
@@ -152,7 +155,7 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
               onClick={() => navigate("/statistics")}
             >
               <BarChart3 className="mr-2 h-4 w-4" />
-              Statistics
+              Статистика
             </Button>
             <Button
               variant="ghost"
@@ -160,7 +163,7 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
               onClick={() => navigate("/activity")}
             >
               <Activity className="mr-2 h-4 w-4" />
-              Activity Log
+              Журнал действий
             </Button>
           </div>
         </div>
@@ -169,7 +172,7 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
       <div className="p-4 border-t">
         <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
-          Logout
+          Выйти
         </Button>
       </div>
     </aside>

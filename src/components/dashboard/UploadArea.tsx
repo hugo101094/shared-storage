@@ -57,10 +57,10 @@ export const UploadArea = ({ userId, folderId }: UploadAreaProps) => {
 
       try {
         await Promise.all(files.map(uploadFile));
-        toast.success(`${files.length} file(s) uploaded successfully`);
+        toast.success(`${files.length} файл(ов) успешно загружено`);
         window.location.reload();
       } catch (error: any) {
-        toast.error(error.message || "Failed to upload files");
+        toast.error(error.message || "Не удалось загрузить файлы");
       } finally {
         setUploading(false);
       }
@@ -76,10 +76,10 @@ export const UploadArea = ({ userId, folderId }: UploadAreaProps) => {
 
     try {
       await Promise.all(files.map(uploadFile));
-      toast.success(`${files.length} file(s) uploaded successfully`);
+      toast.success(`${files.length} файл(ов) успешно загружено`);
       window.location.reload();
     } catch (error: any) {
-      toast.error(error.message || "Failed to upload files");
+      toast.error(error.message || "Не удалось загрузить файлы");
     } finally {
       setUploading(false);
     }
@@ -100,10 +100,10 @@ export const UploadArea = ({ userId, folderId }: UploadAreaProps) => {
             <Upload className="w-8 h-8 text-primary" />
           </div>
           <h3 className="text-lg font-semibold mb-2">
-            {uploading ? "Uploading..." : "Drop files here"}
+            {uploading ? "Загрузка..." : "Перетащите файлы сюда"}
           </h3>
           <p className="text-sm text-muted-foreground mb-4">
-            or click to browse your computer
+            или нажмите, чтобы выбрать файлы
           </p>
           <input
             type="file"
@@ -116,7 +116,7 @@ export const UploadArea = ({ userId, folderId }: UploadAreaProps) => {
           <label htmlFor="file-upload">
             <Button asChild disabled={uploading}>
               <span className="cursor-pointer">
-                {uploading ? "Uploading..." : "Select Files"}
+                {uploading ? "Загрузка..." : "Выбрать файлы"}
               </span>
             </Button>
           </label>

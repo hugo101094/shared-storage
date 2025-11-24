@@ -38,10 +38,10 @@ const Auth = () => {
 
       if (error) throw error;
       
-      toast.success("Welcome back!");
+      toast.success("Добро пожаловать!");
       navigate("/dashboard");
     } catch (error: any) {
-      toast.error(error.message || "Failed to sign in");
+      toast.error(error.message || "Не удалось войти в систему");
     } finally {
       setLoading(false);
     }
@@ -65,10 +65,10 @@ const Auth = () => {
 
       if (error) throw error;
       
-      toast.success("Account created! Check your email to verify.");
+      toast.success("Аккаунт создан! Проверьте email для подтверждения.");
       navigate("/dashboard");
     } catch (error: any) {
-      toast.error(error.message || "Failed to sign up");
+      toast.error(error.message || "Не удалось зарегистрироваться");
     } finally {
       setLoading(false);
     }
@@ -84,13 +84,13 @@ const Auth = () => {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">Shared Storage</CardTitle>
-          <CardDescription>Your secure cloud storage solution</CardDescription>
+          <CardDescription>Ваше безопасное облачное хранилище</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="login">Вход</TabsTrigger>
+              <TabsTrigger value="signup">Регистрация</TabsTrigger>
             </TabsList>
             
             <TabsContent value="login">
@@ -111,7 +111,7 @@ const Auth = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="login-password">Password</Label>
+                  <Label htmlFor="login-password">Пароль</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -126,7 +126,7 @@ const Auth = () => {
                   </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign In"}
+                  {loading ? "Вход..." : "Войти"}
                 </Button>
               </form>
             </TabsContent>
@@ -134,13 +134,13 @@ const Auth = () => {
             <TabsContent value="signup">
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name">Full Name</Label>
+                  <Label htmlFor="signup-name">Полное имя</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="signup-name"
                       type="text"
-                      placeholder="John Doe"
+                      placeholder="Иван Иванов"
                       className="pl-10"
                       value={signupName}
                       onChange={(e) => setSignupName(e.target.value)}
@@ -164,7 +164,7 @@ const Auth = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
+                  <Label htmlFor="signup-password">Пароль</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -180,7 +180,7 @@ const Auth = () => {
                   </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Creating account..." : "Create Account"}
+                  {loading ? "Создание аккаунта..." : "Создать аккаунт"}
                 </Button>
               </form>
             </TabsContent>

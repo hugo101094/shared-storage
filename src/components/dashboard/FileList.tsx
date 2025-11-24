@@ -55,7 +55,7 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
     const { data, error } = await query;
 
     if (error) {
-      toast.error("Failed to load files");
+      toast.error("Не удалось загрузить файлы");
       setLoading(false);
       return;
     }
@@ -89,7 +89,7 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
       .download(file.storage_path);
 
     if (error) {
-      toast.error("Failed to download file");
+      toast.error("Не удалось скачать файл");
       return;
     }
 
@@ -112,7 +112,7 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
       .remove([file.storage_path]);
 
     if (storageError) {
-      toast.error("Failed to delete file from storage");
+      toast.error("Не удалось удалить файл из хранилища");
       return;
     }
 
@@ -122,11 +122,11 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
       .eq("id", deleteFileId);
 
     if (dbError) {
-      toast.error("Failed to delete file");
+      toast.error("Не удалось удалить файл");
       return;
     }
 
-    toast.success("File deleted");
+    toast.success("Файл удалён");
     setDeleteFileId(null);
     loadFiles();
   };
@@ -145,12 +145,12 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Files</CardTitle>
+          <CardTitle>Файлы</CardTitle>
         </CardHeader>
         <CardContent>
           {files.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              No files yet. Upload your first file!
+              Файлов пока нет. Загрузите первый файл!
             </div>
           ) : (
             <div className="space-y-2">
@@ -196,14 +196,14 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
       <AlertDialog open={!!deleteFileId} onOpenChange={() => setDeleteFileId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete File</AlertDialogTitle>
+            <AlertDialogTitle>Удалить файл</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this file? This action cannot be undone.
+              Вы уверены, что хотите удалить этот файл? Это действие нельзя отменить.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Удалить</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

@@ -63,12 +63,12 @@ const Activity = () => {
           <div className="max-w-7xl mx-auto space-y-6">
             <div className="flex items-center gap-3 mb-6">
               <ActivityIcon className="w-8 h-8 text-primary" />
-              <h1 className="text-3xl font-bold">Activity Log</h1>
+              <h1 className="text-3xl font-bold">Журнал действий</h1>
             </div>
 
             <Card>
               <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
+                <CardTitle>Последняя активность</CardTitle>
               </CardHeader>
               <CardContent>
                 {loading ? (
@@ -77,7 +77,7 @@ const Activity = () => {
                   </div>
                 ) : actions.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
-                    No activity yet
+                    Действий пока нет
                   </div>
                 ) : (
                   <div className="space-y-4">
