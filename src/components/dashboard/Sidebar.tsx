@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { User } from "@supabase/supabase-js";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface SidebarProps {
   user: User;
@@ -81,7 +82,7 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
   };
 
   return (
-    <aside className="w-64 border-r bg-card h-screen sticky top-0">
+    <aside className="w-64 border-r bg-card h-screen sticky top-0 flex flex-col">
       <div className="p-6 border-b">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--gradient-primary)" }}>
@@ -94,7 +95,7 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
         </div>
       </div>
 
-      <ScrollArea className="flex-1 h-[calc(100vh-200px)]">
+      <ScrollArea className="flex-1">
         <div className="p-4 space-y-2">
           <Button
             variant={selectedFolder === null ? "secondary" : "ghost"}
@@ -169,8 +170,9 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
         </div>
       </ScrollArea>
 
-      <div className="p-4 border-t">
-        <Button variant="ghost" className="w-full justify-start" onClick={handleLogout}>
+      <div className="p-4 border-t space-y-2 mt-auto">
+        <ThemeToggle />
+        <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10" onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
           Выйти
         </Button>
