@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Trash2, FileText, Image, Video, Music, Archive, File } from "lucide-react";
+import { Download, Trash2, FileText, Image, Video, Music, Archive, File, FolderInput } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -14,6 +14,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface FileListProps {
   userId: string;
@@ -27,16 +40,41 @@ interface FileItem {
   mime_type: string;
   storage_path: string;
   created_at: string;
+  folder_id: string | null;
+}
+
+interface Folder {
+  id: string;
+  name: string;
 }
 
 export const FileList = ({ userId, folderId }: FileListProps) => {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteFileId, setDeleteFileId] = useState<string | null>(null);
+  const [moveFileId, setMoveFileId] = useState<string | null>(null);
+  const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
+  const [folders, setFolders] = useState<Folder[]>([]);
 
   useEffect(() => {
     loadFiles();
+    loadFolders();
   }, [userId, folderId]);
+
+  const loadFolders = async () => {
+    const { data, error } = await supabase
+      .from("folders")
+      .select("id, name")
+      .eq("user_id", userId)
+      .order("name");
+
+    if (error) {
+      toast.error("Не удалось загрузить папки");
+      return;
+    }
+
+    setFolders(data || []);
+  };
 
   const loadFiles = async () => {
     setLoading(true);
@@ -131,6 +169,25 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
     loadFiles();
   };
 
+  const handleMoveFile = async () => {
+    if (!moveFileId) return;
+
+    const { error } = await supabase
+      .from("files")
+      .update({ folder_id: targetFolderId })
+      .eq("id", moveFileId);
+
+    if (error) {
+      toast.error("Не удалось переместить файл");
+      return;
+    }
+
+    toast.success("Файл перемещён");
+    setMoveFileId(null);
+    setTargetFolderId(null);
+    loadFiles();
+  };
+
   if (loading) {
     return (
       <Card>
@@ -174,6 +231,14 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      onClick={() => setMoveFileId(file.id)}
+                      title="Переместить в папку"
+                    >
+                      <FolderInput className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleDownload(file)}
                     >
                       <Download className="w-4 h-4" />
@@ -207,6 +272,37 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={!!moveFileId} onOpenChange={() => setMoveFileId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Переместить файл в папку</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <Select value={targetFolderId || "root"} onValueChange={(value) => setTargetFolderId(value === "root" ? null : value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Выберите папку" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="root">Все файлы (корень)</SelectItem>
+                {folders.map((folder) => (
+                  <SelectItem key={folder.id} value={folder.id}>
+                    {folder.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setMoveFileId(null)} className="flex-1">
+                Отмена
+              </Button>
+              <Button onClick={handleMoveFile} className="flex-1">
+                Переместить
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
