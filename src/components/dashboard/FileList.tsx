@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Trash2, FileText, Image, Video, Music, Archive, File, FolderInput } from "lucide-react";
+import { Download, Trash2, FileText, Image, Video, Music, Archive, File, FolderInput, Folder } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -41,6 +41,9 @@ interface FileItem {
   storage_path: string;
   created_at: string;
   folder_id: string | null;
+  folders?: {
+    name: string;
+  };
 }
 
 interface Folder {
@@ -80,15 +83,14 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
     setLoading(true);
     let query = supabase
       .from("files")
-      .select("*")
+      .select("*, folders(name)")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
 
     if (folderId) {
       query = query.eq("folder_id", folderId);
-    } else {
-      query = query.is("folder_id", null);
     }
+    // Если folderId === null, показываем ВСЕ файлы пользователя (не фильтруем)
 
     const { data, error } = await query;
 
@@ -224,6 +226,15 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
                       <p className="font-medium truncate">{file.name}</p>
                       <p className="text-sm text-muted-foreground">
                         {formatBytes(file.size)} • {new Date(file.created_at).toLocaleDateString()}
+                        {file.folders?.name && (
+                          <>
+                            {" • "}
+                            <span className="inline-flex items-center gap-1">
+                              <Folder className="w-3 h-3" />
+                              {file.folders.name}
+                            </span>
+                          </>
+                        )}
                       </p>
                     </div>
                   </div>
