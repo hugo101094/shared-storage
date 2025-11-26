@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Statistics from "./pages/Statistics";
 import Activity from "./pages/Activity";
+import SharedFile from "./pages/SharedFile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/activity" element={<Activity />} />
+          <Route path="/shared/:token" element={<SharedFile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

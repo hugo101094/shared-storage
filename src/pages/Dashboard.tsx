@@ -58,7 +58,7 @@ const Dashboard = () => {
           <div className="max-w-7xl mx-auto space-y-6">
             <StorageStats userId={user.id} />
             <UploadArea userId={user.id} folderId={currentFolderId} />
-            <FileList userId={user.id} folderId={currentFolderId} />
+            <FileList userId={user.id} folderId={currentFolderId} onFolderChange={setCurrentFolderId} />
           </div>
         </main>
       </div>
