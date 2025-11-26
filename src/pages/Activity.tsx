@@ -57,7 +57,7 @@ const Activity = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="flex">
-        <Sidebar user={user} onFolderChange={() => {}} />
+        <Sidebar user={user} onFolderChange={(folderId) => navigate("/dashboard")} />
         
         <main className="flex-1 p-8">
           <div className="max-w-7xl mx-auto space-y-6">
