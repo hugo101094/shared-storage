@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Trash2, FileText, Image, Video, Music, Archive, File, FolderInput, Folder } from "lucide-react";
+import { Download, Trash2, FileText, Image, Video, Music, Archive, File, FolderInput, Folder, Share2, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -31,6 +31,7 @@ import {
 interface FileListProps {
   userId: string;
   folderId: string | null;
+  onFolderChange: (folderId: string | null) => void;
 }
 
 interface FileItem {
@@ -41,6 +42,7 @@ interface FileItem {
   storage_path: string;
   created_at: string;
   folder_id: string | null;
+  shared_token: string | null;
   folders?: {
     name: string;
   };
@@ -51,13 +53,16 @@ interface Folder {
   name: string;
 }
 
-export const FileList = ({ userId, folderId }: FileListProps) => {
+export const FileList = ({ userId, folderId, onFolderChange }: FileListProps) => {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteFileId, setDeleteFileId] = useState<string | null>(null);
   const [moveFileId, setMoveFileId] = useState<string | null>(null);
   const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
   const [folders, setFolders] = useState<Folder[]>([]);
+  const [shareFileId, setShareFileId] = useState<string | null>(null);
+  const [shareLink, setShareLink] = useState<string>("");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     loadFiles();
@@ -83,7 +88,7 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
     setLoading(true);
     let query = supabase
       .from("files")
-      .select("*, folders(name)")
+      .select("*, folders(name, id)")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
 
@@ -190,6 +195,48 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
     loadFiles();
   };
 
+  const handleGenerateShareLink = async (fileId: string) => {
+    const file = files.find((f) => f.id === fileId);
+    if (!file) return;
+
+    // Если у файла уже есть токен, используем его
+    if (file.shared_token) {
+      const link = `${window.location.origin}/shared/${file.shared_token}`;
+      setShareLink(link);
+      setShareFileId(fileId);
+      return;
+    }
+
+    // Генерируем новый токен
+    const token = crypto.randomUUID();
+    
+    const { error } = await supabase
+      .from("files")
+      .update({ shared_token: token })
+      .eq("id", fileId);
+
+    if (error) {
+      toast.error("Не удалось создать ссылку");
+      return;
+    }
+
+    const link = `${window.location.origin}/shared/${token}`;
+    setShareLink(link);
+    setShareFileId(fileId);
+    loadFiles();
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+    toast.success("Ссылка скопирована");
+  };
+
+  const handleFolderClick = (folderId: string) => {
+    onFolderChange(folderId);
+  };
+
   if (loading) {
     return (
       <Card>
@@ -229,16 +276,27 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
                         {file.folders?.name && (
                           <>
                             {" • "}
-                            <span className="inline-flex items-center gap-1">
+                            <button
+                              onClick={() => handleFolderClick((file.folders as any).id)}
+                              className="inline-flex items-center gap-1 hover:text-primary transition-colors cursor-pointer"
+                            >
                               <Folder className="w-3 h-3" />
                               {file.folders.name}
-                            </span>
+                            </button>
                           </>
                         )}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleGenerateShareLink(file.id)}
+                      title="Поделиться файлом"
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -311,6 +369,33 @@ export const FileList = ({ userId, folderId }: FileListProps) => {
                 Переместить
               </Button>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!shareFileId} onOpenChange={() => {
+        setShareFileId(null);
+        setCopied(false);
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Поделиться файлом</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={shareLink}
+                readOnly
+                className="flex-1 px-3 py-2 border rounded-md bg-muted text-sm"
+              />
+              <Button onClick={handleCopyLink} size="icon" variant="outline">
+                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Любой, у кого есть эта ссылка, сможет просмотреть и скачать файл
+            </p>
           </div>
         </DialogContent>
       </Dialog>
