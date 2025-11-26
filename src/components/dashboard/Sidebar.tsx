@@ -172,7 +172,7 @@ export const Sidebar = ({ user, onFolderChange }: SidebarProps) => {
 
       <div className="p-4 border-t space-y-2 mt-auto">
         <ThemeToggle />
-        <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10" onClick={handleLogout}>
+        <Button variant="ghost" className="w-full justify-start h-10 px-4 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
           Выйти
         </Button>
