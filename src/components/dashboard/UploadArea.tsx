@@ -114,15 +114,15 @@ export const UploadArea = ({ userId, folderId }: UploadAreaProps) => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      <CardContent className="pt-6">
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-            <Upload className="w-8 h-8 text-primary" />
+      <CardContent className="pt-3">
+        <div className="flex flex-col items-center justify-center py-6 text-center">
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+            <Upload className="w-6 h-6 text-primary" />
           </div>
-          <h3 className="text-lg font-semibold mb-2">
+          <h3 className="text-base font-semibold mb-1">
             {uploading ? "Загрузка..." : "Перетащите файлы сюда"}
           </h3>
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-xs text-muted-foreground mb-3">
             или нажмите, чтобы выбрать файлы
           </p>
           <input
